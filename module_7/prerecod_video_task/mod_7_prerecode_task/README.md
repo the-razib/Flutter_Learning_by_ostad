@@ -1,4 +1,4 @@
-# practice_class_3
+# mod_7_prerecode_task
 
 A new Flutter project.
 
