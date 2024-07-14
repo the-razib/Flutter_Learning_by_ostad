@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.blue),
+     // theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
       home: PageActivity(),
     );
@@ -196,6 +196,10 @@ class PageActivity extends StatelessWidget {
       ),
 
       // <<< Body >>>
+      body: Center(
+        child: Image.network('https://picsum.photos/seed/picsum/200/300'),
+
+      ),
     );
   }
 }

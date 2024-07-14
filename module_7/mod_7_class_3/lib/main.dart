@@ -87,7 +87,7 @@ class Home extends StatelessWidget {
 
         // <<< anything can be a button >>>
         // <<< GestureDetector >>>
-        /*child: GestureDetector(
+        child: GestureDetector(
         onDoubleTap: () {
           print('Double tab detection');
         },
@@ -100,16 +100,16 @@ class Home extends StatelessWidget {
           width: 200,
           fit: BoxFit.contain,
         ),
-      ) */
-        child: InkWell(
-          onTap: () {
-            print('single tab detection');
-          },
-          onDoubleTap: () {
-            print('double tab detection');
-          },
-          child: Text('InkWell Button'),
-        ),
+      )
+        // child: InkWell(
+        //   onTap: () {
+        //     print('single tab detection');
+        //   },
+        //   onDoubleTap: () {
+        //     print('double tab detection');
+        //   },
+        //   child: Text('InkWell Button'),
+        // ),
       ),
     );
   }
