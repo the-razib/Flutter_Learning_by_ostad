@@ -49,7 +49,7 @@ class Body extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Text('hello \n New Hellow'),
+              Text('hello \n New Hello'),
               Text('hello'),
               Text('hello'),
               ElevatedButton(onPressed: (){}, child: Text('Button')),
