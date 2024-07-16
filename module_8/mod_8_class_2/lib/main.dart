@@ -148,27 +148,36 @@ class _MainPageState extends State<MainPage> {
        */
 
       // <<< Divider >>> List view separator
-      body:ListView.separated(
+      body: ListView.separated(
         itemCount: fridendList.length,
-
-        itemBuilder: (contex,index){
+        itemBuilder: (contex, index) {
           return ListTile(
             tileColor: Colors.brown.shade50,
             title: Text(fridendList[index]),
             subtitle: Text('Bangladesh'),
-            trailing: Icon(Icons.chat_outlined), // add icone last
-            leading: Text((index+1).toString()),
-            onTap: (){
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.do_not_disturb_on_total_silence,
+                  color: Colors.green,
+                  size: 10,
+                ),
+                Text('Active')
+              ],
+            ),
+            // add icone last
+            leading: Text((index + 1).toString()),
+            onTap: () {
               print('${fridendList[index]} on tap');
             },
             titleTextStyle: TextStyle(
               fontSize: 18,
               color: Colors.black,
-
             ),
           );
         },
-        separatorBuilder: (context,index){
+        separatorBuilder: (context, index) {
           return Divider(
             color: Colors.blue.shade100,
             height: 16,
@@ -177,7 +186,7 @@ class _MainPageState extends State<MainPage> {
             indent: 8,
           );
         },
-      ) ,
+      ),
     );
   }
 }
