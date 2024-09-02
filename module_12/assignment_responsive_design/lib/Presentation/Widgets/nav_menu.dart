@@ -8,28 +8,71 @@ class NavMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: SafeArea(
-        child: Column(
-          children: [
-            const UserAccountsDrawerHeader(
-                accountName: Text('SKILL UP NOW'),
-                accountEmail: Text('TAP HERE')),
-            ListTile(
-              leading: const Icon(Icons.movie_outlined),
-              title: const Text("Episodes"),
-              onTap: () {
-                Navigator.pop(context);
-              },
+      child: Column(
+        children: [
+          Container(
+            color: const Color(0xFF1FE592),
+            padding: const EdgeInsets.all(16.0),
+            width: double.infinity,
+            height: 180,
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'SKILL UP NOW',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'TAP HERE',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.live_help_rounded),
-              title: const Text("About"),
-              onTap: () {
-                Navigator.pop(context);
-              },
+          ),
+          ListTile(
+            contentPadding:
+                const EdgeInsets.only(left: 50.0, top: 32.0, bottom: 16.0),
+            leading: const Icon(
+              Icons.movie_outlined,
+              size: 32.0, // Larger icon size
             ),
-          ],
-        ),
+            title: const Text(
+              "Episodes",
+              style: TextStyle(
+                fontSize: 20.0, // Larger text size
+              ),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            contentPadding:
+            const EdgeInsets.only(left: 50.0, top: 16.0, bottom: 16.0),
+            leading: const Icon(
+              Icons.live_help_rounded,
+              size: 32.0, // Larger icon size
+            ),
+            title: const Text(
+              "About",
+              style: TextStyle(
+                fontSize: 20.0, // Larger text size
+              ),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
       ),
     );
   }
