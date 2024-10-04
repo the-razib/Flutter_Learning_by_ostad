@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/screens/forgot_password_email_screen.dart';
-import 'package:task_manager/ui/screens/main_bottom_nav_ber_screen.dart';
 import 'package:task_manager/ui/screens/sign_up_screen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
 import 'package:task_manager/ui/widgets/background_screen.dart';
@@ -93,13 +92,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _onTabNextButton() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MainBottomNavBerScreen(),
-      ),
-      (route) => false,
-    );
+    // todo:implement on tab next button
   }
 
   void _onTabForgetPasswordButton() {
