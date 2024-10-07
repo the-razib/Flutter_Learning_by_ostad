@@ -1,47 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/screens/profile_screen.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
 
 class TaskManagerAppBer extends StatelessWidget implements PreferredSizeWidget {
   const TaskManagerAppBer({
-    super.key,
+    super.key,  this.isProfileOpen=false,
   });
+  final bool isProfileOpen;
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: AppColor.themeColor,
-      title: Row(
-        children: [
-          CircleAvatar(radius: 16),
-          SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Rabbil Hasan',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  'rabbil@gmail.com',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-
+    return GestureDetector(
+      onTap: () {
+        if(isProfileOpen){
+          return;
+        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfileScreen(),
           ),
-          IconButton(onPressed: () {
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> SignInScreen()), (route) => false,);
-          }, icon: Icon(Icons.logout))
-        ],
+        );
+      },
+      child: AppBar(
+        backgroundColor: AppColor.themeColor,
+        title: Row(
+          children: [
+            CircleAvatar(radius: 16),
+            SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Rabbil Hasan',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    'rabbil@gmail.com',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignInScreen()),
+                    (route) => false,
+                  );
+                },
+                icon: Icon(Icons.logout))
+          ],
+        ),
       ),
     );
   }
