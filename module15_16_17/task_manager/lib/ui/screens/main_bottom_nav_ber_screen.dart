@@ -16,10 +16,10 @@ class MainBottomNavBerScreen extends StatefulWidget {
 class _MainBottomNavBerScreenState extends State<MainBottomNavBerScreen> {
   int _selectedIndex = 0;
   final List<Widget> _screens = [
-    NewTaskScreen(),
-    CompeletedTaskScreen(),
-    CancelledTaskScreen(),
-    ProgressTaskScreen()
+    const NewTaskScreen(),
+    const CompeletedTaskScreen(),
+    const CancelledTaskScreen(),
+    const ProgressTaskScreen()
   ];
 
   @override
