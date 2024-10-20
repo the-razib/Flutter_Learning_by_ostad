@@ -8,7 +8,7 @@ class CompeletedTaskScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
         itemBuilder: (context, int index) {
-          return const TaskCard();
+          // return const TaskCard();
         },
         separatorBuilder: (context, int index) {
           return SizedBox(height: 8);

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:task_manager/data/models/task_model.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
 
 class TaskCard extends StatefulWidget {
   const TaskCard({
-    super.key,
+    super.key, required this.taskModel,
   });
+
+  final TaskModel taskModel;
 
   @override
   State<TaskCard> createState() => _TaskCardState();
@@ -13,6 +17,14 @@ class TaskCard extends StatefulWidget {
 class _TaskCardState extends State<TaskCard> {
   @override
   Widget build(BuildContext context) {
+    // Parse the createdDate
+    DateTime createdDate = DateTime.parse(
+        widget.taskModel.createdDate.toString());
+
+    // String formattedDate = DateFormat('yMMMd').add_jm().format(createdDate);
+    // Format the date to show time first, then date
+    String formattedDate = DateFormat('h:mm a, MMM d, y').format(createdDate);
+
     return Card(
       color: Colors.white,
       child: Padding(
@@ -21,11 +33,11 @@ class _TaskCardState extends State<TaskCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Title of the task',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              widget.taskModel.title ?? '',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            Text('Description of task'),
-            Text('Date: 12-12-12'),
+            Text(widget.taskModel.description ?? ''),
+            Text('Date: $formattedDate'),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -34,7 +46,8 @@ class _TaskCardState extends State<TaskCard> {
                 _buildTaskStatusChip(),
                 Wrap(
                   children: [
-                    IconButton(onPressed:_onTabEditButton, icon: Icon(Icons.edit)),
+                    IconButton(
+                        onPressed: _onTabEditButton, icon: Icon(Icons.edit)),
                     IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
                   ],
                 )
@@ -51,9 +64,9 @@ class _TaskCardState extends State<TaskCard> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          content:Column(
+          content: Column(
             mainAxisSize: MainAxisSize.min,
-            children: ['New','Completed','Cancelled','Progress'].map((e){
+            children: ['New', 'Completed', 'Cancelled', 'Progress'].map((e) {
               return ListTile(
                 title: Text(e),
 
@@ -61,10 +74,10 @@ class _TaskCardState extends State<TaskCard> {
             }).toList(),
           ),
           actions: [
-            TextButton(onPressed: (){
+            TextButton(onPressed: () {
               Navigator.pop(context);
             }, child: const Text('Cancel')),
-            TextButton(onPressed: (){}, child: const Text('Okay')),
+            TextButton(onPressed: () {}, child: const Text('Okay')),
           ],
         );
       },
