@@ -21,12 +21,14 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
     _getProgressTaskList();
     super.initState();
   }
+
   bool _addProgressTaskListInProgress = false;
-  List<TaskModel> _progressTaskList=[];
+  List<TaskModel> _progressTaskList = [];
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async{
+      onRefresh: () async {
         await _getProgressTaskList();
       },
       child: Visibility(
@@ -34,7 +36,12 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
         replacement: const CentertedCircularProgressIndicator(),
         child: ListView.separated(
             itemBuilder: (context, int index) {
-              return  TaskCard(taskModel: _progressTaskList[index],);
+              return TaskCard(
+                taskModel: _progressTaskList[index],
+                onRefreshList: () {
+                  _getProgressTaskList();
+                },
+              );
             },
             separatorBuilder: (context, int index) {
               return const SizedBox(height: 8);
@@ -49,17 +56,17 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
     _addProgressTaskListInProgress = true;
     setState(() {});
     final NetworkResponse response =
-    await NetworkCaller.getRequest(url: Urls.progressTaskList);
+        await NetworkCaller.getRequest(url: Urls.progressTaskList);
 
-    if(response.isSuccess) {
-      final TaskListModel taskListModel = TaskListModel.fromJson(response.responseData);
-      _progressTaskList=taskListModel.taskList ?? [];
-    }else {
+    if (response.isSuccess) {
+      final TaskListModel taskListModel =
+          TaskListModel.fromJson(response.responseData);
+      _progressTaskList = taskListModel.taskList ?? [];
+    } else {
       showSnackBerMessage(context, response.errorMessage);
     }
 
-    _addProgressTaskListInProgress=false;
+    _addProgressTaskListInProgress = false;
     setState(() {});
   }
-
 }

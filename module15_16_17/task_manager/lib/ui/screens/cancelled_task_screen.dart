@@ -21,12 +21,14 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
     _getCancelledTaskList();
     super.initState();
   }
+
   bool _addCancelledTaskListInProgress = false;
-  List<TaskModel> _cancelledTaskList=[];
+  List<TaskModel> _cancelledTaskList = [];
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async{
+      onRefresh: () async {
         await _getCancelledTaskList();
       },
       child: Visibility(
@@ -34,7 +36,12 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
         replacement: CentertedCircularProgressIndicator(),
         child: ListView.separated(
             itemBuilder: (context, int index) {
-              return  TaskCard(taskModel: _cancelledTaskList[index],);
+              return TaskCard(
+                taskModel: _cancelledTaskList[index],
+                onRefreshList: () {
+                  _getCancelledTaskList();
+                },
+              );
             },
             separatorBuilder: (context, int index) {
               return const SizedBox(height: 8);
@@ -49,17 +56,17 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
     _addCancelledTaskListInProgress = true;
     setState(() {});
     final NetworkResponse response =
-    await NetworkCaller.getRequest(url: Urls.cancelledTaskList);
+        await NetworkCaller.getRequest(url: Urls.cancelledTaskList);
 
-    if(response.isSuccess) {
-      final TaskListModel taskListModel = TaskListModel.fromJson(response.responseData);
-      _cancelledTaskList=taskListModel.taskList ?? [];
-    }else {
+    if (response.isSuccess) {
+      final TaskListModel taskListModel =
+          TaskListModel.fromJson(response.responseData);
+      _cancelledTaskList = taskListModel.taskList ?? [];
+    } else {
       showSnackBerMessage(context, response.errorMessage);
     }
 
-    _addCancelledTaskListInProgress=false;
+    _addCancelledTaskListInProgress = false;
     setState(() {});
   }
-
 }

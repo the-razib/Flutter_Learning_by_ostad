@@ -16,25 +16,32 @@ class CompletedTaskScreen extends StatefulWidget {
 }
 
 class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
-@override
+  @override
   void initState() {
     _getCompletedTaskList();
     super.initState();
   }
+
   bool _addCompletedTaskListInProgress = false;
-  List<TaskModel> _completedTaskList=[];
+  List<TaskModel> _completedTaskList = [];
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async{
-       await _getCompletedTaskList();
+      onRefresh: () async {
+        await _getCompletedTaskList();
       },
       child: Visibility(
         visible: !_addCompletedTaskListInProgress,
         replacement: CentertedCircularProgressIndicator(),
         child: ListView.separated(
             itemBuilder: (context, int index) {
-              return  TaskCard(taskModel: _completedTaskList[index],);
+              return TaskCard(
+                taskModel: _completedTaskList[index],
+                onRefreshList: () {
+                  _getCompletedTaskList();
+                },
+              );
             },
             separatorBuilder: (context, int index) {
               return const SizedBox(height: 8);
@@ -49,17 +56,17 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
     _addCompletedTaskListInProgress = true;
     setState(() {});
     final NetworkResponse response =
-    await NetworkCaller.getRequest(url: Urls.completedTaskList);
+        await NetworkCaller.getRequest(url: Urls.completedTaskList);
 
-    if(response.isSuccess) {
-      final TaskListModel taskListModel = TaskListModel.fromJson(response.responseData);
-      _completedTaskList=taskListModel.taskList ?? [];
-    }else {
+    if (response.isSuccess) {
+      final TaskListModel taskListModel =
+          TaskListModel.fromJson(response.responseData);
+      _completedTaskList = taskListModel.taskList ?? [];
+    } else {
       showSnackBerMessage(context, response.errorMessage);
     }
 
-    _addCompletedTaskListInProgress=false;
+    _addCompletedTaskListInProgress = false;
     setState(() {});
   }
-
 }
