@@ -15,7 +15,7 @@ class NetworkCaller {
         'token': AuthController.accessToken.toString(),
       };
       printRequest(url, null, headers);
-      final Response response = await get(uri,headers: headers);
+      final Response response = await get(uri, headers: headers);
       printResponse(url, response);
 
       if (response.statusCode == 200) {
@@ -35,6 +35,7 @@ class NetworkCaller {
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
+          errorMessage:jsonDecode(response.body)['data']
         );
       }
     } catch (e) {
@@ -89,6 +90,7 @@ class NetworkCaller {
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
+          errorMessage: jsonDecode(response.body)['data'],
         );
       }
     } catch (e) {

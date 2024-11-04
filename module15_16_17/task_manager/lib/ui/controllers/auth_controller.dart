@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task_manager/data/models/user_model.dart';
 /// A controller class to manage authentication-related operations.
 class AuthController{
   static const String _accessTokenKey='access-token';
+  static const String _userDataKey='userdata';
+
   static String? accessToken;
+  static UserModel? userdata;
 
   /// Saves the access token to shared preferences.
   ///
@@ -13,6 +19,18 @@ class AuthController{
     accessToken=token;
   }
 
+static Future<void> saveUserData(UserModel userModel) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  String userJson = jsonEncode(userModel.toJson());
+  bool result = await sharedPreferences.setString(_userDataKey, userJson);
+  if (result) {
+    userdata = userModel;
+    print('User data saved successfully.');
+  } else {
+    print('Failed to save user data.');
+  }
+}
+
   /// Retrieves the access token from shared preferences.
   ///
   /// \returns The access token if it exists, otherwise null.
@@ -21,6 +39,17 @@ class AuthController{
     String? token=sharedPreferences.getString(_accessTokenKey);
     accessToken=token;
     return token;
+  }
+
+  static Future<UserModel?> getUserData() async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? userEncodedData=sharedPreferences.getString(_userDataKey);
+    if(userEncodedData==null) {
+      return null;
+    }
+    UserModel userModel = UserModel.fromJson(jsonDecode(userEncodedData));
+    userdata=userModel;
+    return userModel;
   }
 
   /// Checks if the user is logged in.

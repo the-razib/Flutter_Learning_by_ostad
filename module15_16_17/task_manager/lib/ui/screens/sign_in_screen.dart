@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/models/login_model.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/utils/urls.dart';
@@ -151,14 +152,16 @@ class _SignInScreenState extends State<SignInScreen> {
       _inProgress = false;
     });
     if (response.isSuccess) {
+      LogInModel logInModel = LogInModel.fromJson(response.responseData);
       // Save the access token to shared preferences
-      await AuthController.saveAccessToken(response.responseData['token']);
+      await AuthController.saveAccessToken(logInModel.token!);
+      await AuthController.saveUserData(logInModel.data!);
 
       // Handle successful sign-in by navigating to the main screen
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => MainBottomNavBerScreen(),
+          builder: (context) => const MainBottomNavBerScreen(),
         ),
         (route) => false,
       );

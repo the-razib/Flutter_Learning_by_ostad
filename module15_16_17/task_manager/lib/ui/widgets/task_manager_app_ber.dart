@@ -35,7 +35,7 @@ class TaskManagerAppBer extends StatelessWidget implements PreferredSizeWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Rabbil Hasan',
+                    AuthController.userdata?.fullName ?? '',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -43,7 +43,7 @@ class TaskManagerAppBer extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
                   Text(
-                    'rabbil@gmail.com',
+                    AuthController.userdata?.email ?? '',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.white,

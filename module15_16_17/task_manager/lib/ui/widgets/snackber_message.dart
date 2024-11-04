@@ -5,7 +5,7 @@ void showSnackBerMessage(BuildContext context, String message,
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(message),
-      backgroundColor: isError ? Colors.red : null,
+      backgroundColor: isError ? Colors.red : Colors.green,
     ),
   );
 }
