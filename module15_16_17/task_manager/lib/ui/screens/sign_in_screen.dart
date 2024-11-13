@@ -37,29 +37,26 @@ class _SignInScreenState extends State<SignInScreen> {
         child: Padding(
           padding: const EdgeInsets.all(32.0),
           child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  const SizedBox(height: 82),
-                  Text(
-                    'Get Started With',
-                    style: textTheme.displaySmall
-                        ?.copyWith(fontWeight: FontWeight.w500),
+            child: Column(
+              children: [
+                const SizedBox(height: 82),
+                Text(
+                  'Get Started With',
+                  style: textTheme.displaySmall
+                      ?.copyWith(fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 16),
+                _buildSignInForm(),
+                const SizedBox(height: 24),
+                TextButton(
+                  onPressed: _onTabForgetPasswordButton,
+                  child: const Text(
+                    'Forget Password',
+                    style: TextStyle(color: Colors.grey),
                   ),
-                  const SizedBox(height: 16),
-                  _buildSignInForm(),
-                  const SizedBox(height: 24),
-                  TextButton(
-                    onPressed: _onTabForgetPasswordButton,
-                    child: Text(
-                      'Forget Password',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                  _buildSignUpSection()
-                ],
-              ),
+                ),
+                _buildSignUpSection()
+              ],
             ),
           ),
         ),
@@ -68,45 +65,45 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget _buildSignInForm() {
-    return Column(
-      children: [
-        TextFormField(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          controller: _emailTEController,
-          keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(hintText: 'Email'),
-          validator: (String? value) {
-            if (value?.isEmpty ?? true) {
-              return 'Enter your email';
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            controller: _passwordTEController,
-            obscureText: true,
-            decoration: const InputDecoration(hintText: 'Password'),
+            controller: _emailTEController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(hintText: 'Email'),
             validator: (String? value) {
               if (value?.isEmpty ?? true) {
-                return 'Enter your password';
-              }
-              if (value!.length <= 6) {
-                return 'Enter a password more then 6 characters';
+                return 'Enter your email';
               }
               return null;
-            }),
-        const SizedBox(height: 24),
-        Visibility(
-          visible: !_inProgress,
-          replacement: const CentertedCircularProgressIndicator(),
-          child: ElevatedButton(
-            onPressed: _onTabNextButton,
-            child: const Icon(Icons.arrow_circle_right_outlined),
+            },
           ),
-        ),
-      ],
+          const SizedBox(height: 8),
+          TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              controller: _passwordTEController,
+              obscureText: true,
+              decoration: const InputDecoration(hintText: 'Password'),
+              validator: (String? value) {
+                if (value?.isEmpty ?? true) {
+                  return 'Enter your password';
+                }
+                return null;
+              }),
+          const SizedBox(height: 24),
+          Visibility(
+            visible: !_inProgress,
+            replacement: const CentertedCircularProgressIndicator(),
+            child: ElevatedButton(
+              onPressed: _onTabNextButton,
+              child: const Icon(Icons.arrow_circle_right_outlined),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -132,8 +129,10 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _onTabNextButton() {
-    if (!_formKey.currentState!.validate()) {}
-    _signIn();
+    if (_formKey.currentState!.validate()) {
+      _signIn();
+    }
+
   }
 
   Future<void> _signIn() async {
