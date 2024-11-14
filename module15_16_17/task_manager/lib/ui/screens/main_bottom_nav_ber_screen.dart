@@ -4,9 +4,12 @@ import 'package:task_manager/ui/screens/compeleted_task_screen.dart';
 import 'package:task_manager/ui/screens/new_task_screen.dart';
 import 'package:task_manager/ui/screens/progress_task_screen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/ui/widgets/task_manager_app_ber.dart';
 
 class MainBottomNavBerScreen extends StatefulWidget {
+  static const String name = '/main-bottom-nav-ber-screen';
+
   const MainBottomNavBerScreen({super.key});
 
   @override
@@ -25,7 +28,7 @@ class _MainBottomNavBerScreenState extends State<MainBottomNavBerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TaskManagerAppBer(),
+      appBar: const TaskManagerAppBer(),
       body: _screens[_selectedIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
@@ -55,4 +58,3 @@ class _MainBottomNavBerScreenState extends State<MainBottomNavBerScreen> {
     );
   }
 }
-

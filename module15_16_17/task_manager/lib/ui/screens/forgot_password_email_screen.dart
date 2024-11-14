@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/data/models/network_response.dart';
-import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/data/utils/urls.dart';
+import 'package:get/get.dart';
+import 'package:task_manager/ui/controllers/forgot_password_email_controller.dart';
 import 'package:task_manager/ui/screens/forgot_password_otp_screen.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
@@ -11,6 +10,8 @@ import 'package:task_manager/ui/widgets/centerted_circular_progress_indicator.da
 import 'package:task_manager/ui/widgets/snackber_message.dart';
 
 class ForgotPasswordEmailScreen extends StatefulWidget {
+  static const String name = '/forgot-password-email-screen';
+
   const ForgotPasswordEmailScreen({super.key});
 
   @override
@@ -22,7 +23,7 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
   final TextEditingController _emailTEController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _forgetPasswordInProgress = false;
+  final ForgotPasswordEmailController forgotPasswordEmailController=Get.find<ForgotPasswordEmailController>();
 
   @override
   Widget build(BuildContext context) {
@@ -75,13 +76,17 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
             },
           ),
           const SizedBox(height: 24),
-          Visibility(
-            visible: _forgetPasswordInProgress == false,
-            replacement: const CentertedCircularProgressIndicator(),
-            child: ElevatedButton(
-              onPressed: _onTabNextButton,
-              child: Icon(Icons.arrow_circle_right_outlined),
-            ),
+          GetBuilder<ForgotPasswordEmailController>(
+            builder: (controller) {
+              return Visibility(
+                visible: controller.forgetPasswordInProgress == false,
+                replacement: const CenterCircularProgressIndicator(),
+                child: ElevatedButton(
+                  onPressed: _onTabNextButton,
+                  child: const Icon(Icons.arrow_circle_right_outlined),
+                ),
+              );
+            }
           ),
         ],
       ),
@@ -91,7 +96,7 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
   Widget _buildSignInSection() {
     return RichText(
       text: TextSpan(
-        style: TextStyle(
+        style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w600,
             fontSize: 14,
@@ -100,7 +105,7 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
         children: [
           TextSpan(
             text: 'Sign In',
-            style: TextStyle(color: AppColor.themeColor),
+            style: const TextStyle(color: AppColor.themeColor),
             recognizer: TapGestureRecognizer()..onTap = _onTapSignIn,
             // Note: This sets up a gesture recognizer for the "Sign Up" text.
           ),
@@ -114,7 +119,7 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
       if (isBasicEmailValid(_emailTEController.text) == true) {
         _sendOTPForEmailVerification();
       } else {
-        showSnackBerMessage(context, 'Please enter valid email', true);
+        showSnackBerMessage('Please enter valid email', true);
       }
     }
   }
@@ -126,34 +131,19 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
   }
 
   void _onTapSignIn() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SignInScreen(),
-      ),
-    );
+    Get.toNamed(SignInScreen.name);
   }
 
   Future<void> _sendOTPForEmailVerification() async {
-    setState(() {
-      _forgetPasswordInProgress = true;
-    });
-    final NetworkResponse response = await NetworkCaller.getRequest(
-      url:Urls.recoverVerifyEmail(_emailTEController.text),
-    );
-    setState(() {
-      _forgetPasswordInProgress = false;
-    });
-    if (response.isSuccess) {
-      showSnackBerMessage(context, 'A 6 digit OTP code sent to your email');
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ForgotPasswordOtpScreen(email:_emailTEController.text),
-        ),
-      );
+    final bool result=await forgotPasswordEmailController.sendOTPForEmailVerification(_emailTEController.text);
+
+    if (result) {
+      showSnackBerMessage('A 6 digit OTP code sent to your email');
+      Get.toNamed(ForgotPasswordOtpScreen.name,arguments: {
+        'email':_emailTEController.text
+      });
     } else {
-      showSnackBerMessage(context, response.errorMessage, true);
+      showSnackBerMessage(forgotPasswordEmailController.errorMessage!, true);
     }
   }
 }

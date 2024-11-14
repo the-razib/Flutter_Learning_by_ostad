@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/data/models/network_response.dart';
-import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/data/utils/urls.dart';
-import 'package:task_manager/ui/screens/forgot_password_otp_screen.dart';
+import 'package:get/get.dart';
+
+import 'package:task_manager/ui/controllers/reset_password_controller.dart';
+
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
 import 'package:task_manager/ui/widgets/background_screen.dart';
@@ -11,11 +11,11 @@ import 'package:task_manager/ui/widgets/centerted_circular_progress_indicator.da
 import 'package:task_manager/ui/widgets/snackber_message.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen(
-      {super.key, required this.email, required this.otp});
+  static const String name = '/reset-password-screen';
 
-  final String? email;
-  final String? otp;
+  const ResetPasswordScreen({
+    super.key,
+  });
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -25,9 +25,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _passwordTEController = TextEditingController();
   final TextEditingController _confirmPasswordTEController =
       TextEditingController();
-  bool _setPasswordInProgress = false;
-
+  final ResetPasswordController resetPasswordController =
+      Get.find<ResetPasswordController>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? email;
+  String? otp;
+
+  @override
+  void initState() {
+    super.initState();
+    final Map<String, String?> args = Get.arguments;
+    email = args['email'] ?? '';
+    otp = args['otp'] ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,14 +101,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 return null;
               }),
           const SizedBox(height: 24),
-          Visibility(
-            visible: _setPasswordInProgress == false,
-            replacement: CentertedCircularProgressIndicator(),
-            child: ElevatedButton(
-              onPressed: _onTabNextButton,
-              child: const Icon(Icons.arrow_circle_right_outlined),
-            ),
-          ),
+          GetBuilder<ResetPasswordController>(builder: (controller) {
+            return Visibility(
+              visible: controller.setPasswordInProgress == false,
+              replacement: const CenterCircularProgressIndicator(),
+              child: ElevatedButton(
+                onPressed: _onTabNextButton,
+                child: const Icon(Icons.arrow_circle_right_outlined),
+              ),
+            );
+          }),
         ],
       ),
     );
@@ -130,53 +142,30 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       if (_passwordTEController.text == _confirmPasswordTEController.text) {
         _setPassword();
       } else {
-        showSnackBerMessage(context, 'Password does not match', true);
+        showSnackBerMessage('Password does not match', true);
       }
     }
   }
 
   void _onTapSignIn() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const SignInScreen()),
-      (route) => false,
+    Get.offNamedUntil(
+      SignInScreen.name,
+          (route) => false,
     );
   }
 
   Future<void> _setPassword() async {
-    setState(() {
-      _setPasswordInProgress = true;
-    });
-    Map<String, dynamic> requestBody = {
-      "email": widget.email,
-      "OTP": widget.otp,
-      "password": _passwordTEController.text
-    };
-    final NetworkResponse response = await NetworkCaller.postRequest(
-        url: Urls.recoverResetPassword, body: requestBody);
+    final bool result = await resetPasswordController.setPassword(
+        email!, otp!, _passwordTEController.text);
 
-    setState(() {
-      _setPasswordInProgress = false;
-    });
-    if (response.isSuccess) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const SignInScreen()),
+    if (result) {
+      showSnackBerMessage('Password set successfully');
+      Get.offNamedUntil(
+        SignInScreen.name,
         (route) => false,
       );
-    } if (response.isSuccess) {
-      showSnackBerMessage(context, 'Password set successfully');
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const SignInScreen()),
-            (route) => false,
-      );
     } else {
-      if (response.errorMessage.contains('<html>')) {
-        showSnackBerMessage(context, 'Server error, please try again later.', true);
-      } else {
-        showSnackBerMessage(context, response.errorMessage, true);
-      }
+      showSnackBerMessage(resetPasswordController.errorMessage!, true);
     }
   }
 }

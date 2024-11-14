@@ -20,7 +20,7 @@ class TaskManagerAppBer extends StatelessWidget implements PreferredSizeWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProfileScreen(),
+            builder: (context) => const ProfileScreen(),
           ),
         );
       },
@@ -28,15 +28,15 @@ class TaskManagerAppBer extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor: AppColor.themeColor,
         title: Row(
           children: [
-            CircleAvatar(radius: 16),
-            SizedBox(width: 14),
+            const CircleAvatar(radius: 16),
+            const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     AuthController.userdata?.fullName ?? '',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
@@ -44,7 +44,7 @@ class TaskManagerAppBer extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   Text(
                     AuthController.userdata?.email ?? '',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.white,
                     ),
@@ -57,11 +57,11 @@ class TaskManagerAppBer extends StatelessWidget implements PreferredSizeWidget {
                   await AuthController.clearUserData();
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => SignInScreen()),
+                    MaterialPageRoute(builder: (context) => const SignInScreen()),
                     (route) => false,
                   );
                 },
-                icon: Icon(Icons.logout))
+                icon: const Icon(Icons.logout))
           ],
         ),
       ),
@@ -69,6 +69,5 @@ class TaskManagerAppBer extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  // TODO: implement preferredSize
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
