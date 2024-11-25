@@ -16,11 +16,10 @@ class FirebaseNotificationManager {
   }
 
   static void _onMessage(RemoteMessage message) {
-    if (kDebugMode) {
       print(message.data);
       print(message.notification?.title);
       print(message.notification?.body);
-    }
+
   }
 
   static Future<String?> getToken() async {
@@ -34,10 +33,9 @@ class FirebaseNotificationManager {
 }
 
 Future<void> _onBackgroundMessage(RemoteMessage message) async {
-  if (kDebugMode) {
     print('Got a new message');
     print(message.data);
     print(message.notification?.title);
     print(message.notification?.body);
-  }
+
 }
