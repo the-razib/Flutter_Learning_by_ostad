@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/ui/screens/splash_screen.dart';
+import 'package:get/get.dart';
+import 'package:task_manager/controller_binder.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
+import 'package:task_manager/ui/utils/app_pages.dart';
 
 class TaskManager extends StatefulWidget {
   const TaskManager({super.key});
@@ -15,7 +17,10 @@ class TaskManager extends StatefulWidget {
 class _TaskManagerState extends State<TaskManager> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      initialRoute: '/',
+      initialBinding: ControllerBinder(),
+      getPages: AppPages.pages,
       navigatorKey: TaskManager.navigatorKey,
       theme: ThemeData(
         colorSchemeSeed: AppColor.themeColor,
@@ -23,7 +28,6 @@ class _TaskManagerState extends State<TaskManager> {
         elevatedButtonTheme: _elevatedButtonThemeData(),
       ),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
     );
   }
 
@@ -46,15 +50,15 @@ class _TaskManagerState extends State<TaskManager> {
       fillColor: Colors.white,
       filled: true,
       hintStyle: const TextStyle(fontWeight: FontWeight.w400),
-      border: _inputborder(),
-      focusedBorder: _inputborder(),
-      enabledBorder: _inputborder(),
-      disabledBorder: _inputborder(),
-      errorBorder: _inputborder(),
+      border: _inputBorder(),
+      focusedBorder: _inputBorder(),
+      enabledBorder: _inputBorder(),
+      disabledBorder: _inputBorder(),
+      errorBorder: _inputBorder(),
     );
   }
 
-  OutlineInputBorder _inputborder() {
+  OutlineInputBorder _inputBorder() {
     return OutlineInputBorder(
       borderSide: BorderSide.none,
       borderRadius: BorderRadius.circular(8),

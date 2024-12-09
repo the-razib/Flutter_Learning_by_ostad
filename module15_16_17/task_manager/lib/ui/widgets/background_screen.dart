@@ -13,7 +13,7 @@ class BackgroundScreen extends StatelessWidget {
     return Stack(
       children: [
         SvgPicture.asset(
-          AssetsPath.bracgroundSVG,
+          AssetsPath.backgroundSVG,
           height: screenSize.height,
           width: screenSize.width,
           fit: BoxFit.cover,

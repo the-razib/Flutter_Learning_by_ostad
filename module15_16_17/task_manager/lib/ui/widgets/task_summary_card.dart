@@ -27,8 +27,8 @@ class TaskSummaryCard extends StatelessWidget {
                     ?.copyWith(fontWeight: FontWeight.w600),
               ),
               Text(
-                '$title',
-                style: TextStyle(color: Colors.grey),
+                title,
+                style: const TextStyle(color: Colors.grey),
               ),
             ],
           ),
