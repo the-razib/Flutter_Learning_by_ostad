@@ -1,0 +1,138 @@
+import 'dart:ffi';
+
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Position? position;
+  LatLng? currentPosition;
+  late GoogleMapController googleMapController;
+  Set<Marker> markers = {};
+
+  // @override
+  // void initState() {
+  //   lisitenCurrentLocation();
+  //   super.initState();
+  // }
+
+  Future<void> lisitenCurrentLocation() async {
+    final isGranted = await isLocationPermissionGranted();
+    if (isGranted) {
+      final isServiceEnable = await checkGPSServiceEnable();
+      if (isServiceEnable) {
+        Geolocator.getPositionStream(
+          locationSettings: const LocationSettings(
+            timeLimit: Duration(seconds: 10),
+          ),
+        ).listen((pos) {
+          currentPosition = LatLng(pos.latitude, pos.longitude);
+          setState(() {});
+        });
+      } else {
+        Geolocator.openLocationSettings();
+      }
+    } else {
+      final result = await requestLocationPermission();
+      if (result) {
+        getCurrentLocation();
+      } else {
+        Geolocator.openAppSettings();
+      }
+    }
+  }
+
+  Future<void> getCurrentLocation() async {
+    final isGranted = await isLocationPermissionGranted();
+    if (isGranted) {
+      final isServiceEnable = await checkGPSServiceEnable();
+      if (isServiceEnable) {
+        Position currentLocation = await Geolocator.getCurrentPosition();
+        position = currentLocation;
+        // currentPosition =
+        //     LatLng(currentLocation.latitude, currentLocation.longitude);
+        setState(() {});
+      } else {
+        Geolocator.openLocationSettings();
+      }
+    } else {
+      final result = await requestLocationPermission();
+      if (result) {
+        getCurrentLocation();
+      } else {
+        Geolocator.openAppSettings();
+      }
+    }
+  }
+
+  Future<bool> isLocationPermissionGranted() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> requestLocationPermission() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> checkGPSServiceEnable() async {
+    return Geolocator.isLocationServiceEnabled();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Realtime Location Tracker',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+        ),
+        backgroundColor: Colors.blue,
+        centerTitle: true,
+      ),
+      body: GoogleMap(
+        onMapCreated: (GoogleMapController controller) {
+          googleMapController = controller;
+        },
+        initialCameraPosition: CameraPosition(
+          target: LatLng(23.793740389725325, 90.37225540689055),
+          zoom: 16,
+        ),
+        zoomControlsEnabled: false,
+        zoomGesturesEnabled: true,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          googleMapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: LatLng(23.793740389725325, 90.37225540689055),
+                  zoom: 16),
+            ),
+          );
+        },
+        backgroundColor: Colors.blue,
+        child: const Icon(
+          Icons.location_searching,
+          color: Colors.white,
+          size: 24,
+        ),
+      ),
+    );
+  }
+}
